@@ -1,0 +1,15 @@
+<h3>Commentaires</h3>
+
+<div *ngFor="let comment of filteredComments; let i = index" class="comment">
+  <p><strong>{{ comment.username }}</strong> ({{ comment.date | date:'short' }})</p>
+  <p>{{ comment.message }}</p>
+  <button *ngIf="comment.username === getCurrentUsername()" (click)="deleteComment(i)">
+  Supprimer
+</button>
+  <hr />
+</div>
+
+<div class="new-comment">
+  <textarea [(ngModel)]="newComment" placeholder="Écrire un commentaire..."></textarea>
+  <button (click)="addComment()">Envoyer</button>
+</div>

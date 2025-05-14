@@ -1,0 +1,37 @@
+<h2>Inscription</h2>
+
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="username">Nom d'utilisateur :</label>
+    <input id="username" type="text" formControlName="username" />
+    <div *ngIf="submitted && registerForm.controls['username'].invalid" style="color: red;">
+      Nom d'utilisateur requis
+    </div>
+  </div>
+
+  <div>
+    <label for="email">Email :</label>
+    <input id="email" type="email" formControlName="email" />
+    <div *ngIf="submitted && registerForm.controls['email'].invalid" style="color: red;">
+      Email invalide
+    </div>
+  </div>
+
+  <div>
+    <label for="password">Mot de passe :</label>
+    <input id="password" type="password" formControlName="password" />
+    <div *ngIf="submitted && registerForm.controls['password'].invalid" style="color: red;">
+      Mot de passe requis
+    </div>
+  </div>
+
+  <div>
+    <label for="confirmPassword">Confirmer le mot de passe :</label>
+    <input id="confirmPassword" type="password" formControlName="confirmPassword" />
+    <div *ngIf="submitted && registerForm.controls['confirmPassword'].invalid" style="color: red;">
+      Confirmation requise
+    </div>
+  </div>
+
+  <button type="submit">S'inscrire</button>
+</form>

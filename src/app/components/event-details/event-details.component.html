@@ -1,0 +1,19 @@
+<div *ngIf="event; else notFound">
+  <h2>{{ event.title }}</h2>
+  <button (click)="toggleFav()" class="fav-button">
+    {{ isFav ? '💛 Retirer des favoris' : '🤍 Ajouter aux favoris' }}
+  </button>
+  
+  
+  <p><strong>Date :</strong> {{ event.date }}</p>
+  <img *ngIf="event?.image" [src]="event.image" alt="{{ event.title }}" class="event-img" />
+
+  <p>{{ event.description }}</p>
+</div>
+
+<app-comment-section [eventId]="event!.id"></app-comment-section>
+
+
+<ng-template #notFound>
+  <p>Événement non trouvé 😢</p>
+</ng-template>

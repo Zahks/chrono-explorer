@@ -1,0 +1,13 @@
+<h2>⭐ Événements favoris</h2>
+
+<div *ngIf="favoriteEvents.length > 0; else noFavs">
+  <ul>
+    <li *ngFor="let event of favoriteEvents">
+      <a [routerLink]="['/event', event.id]">{{ event.title }}</a> ({{ event.date }})
+    </li>
+  </ul>
+</div>
+
+<ng-template #noFavs>
+  <p>Aucun événement ajouté aux favoris pour le moment 💔</p>
+</ng-template>
