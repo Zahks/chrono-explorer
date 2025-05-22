@@ -21,5 +21,25 @@
 }
 
 .fav-button:hover {
-  background-color: #ffe6b3;
+  background-color: #e0aa3c;
 }
+
+.description {
+  font-weight: 500;
+  font-size: 1.5rem;
+  color: #d86767;
+  margin: 20px 0 10px;
+}
+
+.details {
+  background-color: #f9f9f9;
+  border-left: 4px solid #3b82f6;
+  padding: 12px;
+  margin-bottom: 25px;
+  font-size: 1.4rem;
+  line-height: 1.8;
+  border-radius: 6px;
+  color: #333;
+}
+
+

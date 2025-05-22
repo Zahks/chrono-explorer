@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthApiService } from '../../services/auth-api.service';
 
 @Component({
   selector: 'app-register',
@@ -17,35 +17,40 @@ export class RegisterComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private authApi: AuthApiService,
     private router: Router
   ) {
     this.registerForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+      ]],
       confirmPassword: ['', Validators.required]
     });
   }
 
-  onSubmit() {
+  onSubmit(): void {
     this.submitted = true;
+
+    if (this.registerForm.invalid) return;
+
     const { username, email, password, confirmPassword } = this.registerForm.value;
 
-    if (this.registerForm.valid) {
-      if (password !== confirmPassword) {
-        alert('Les mots de passe ne correspondent pas ❌');
-        return;
-      }
-
-      const success = this.authService.register(username, email, password);
-      if (success) {
-        alert('Inscription réussie ✅');
-        localStorage.setItem('connectedUser', username); // ✅ connecter automatiquement
-        this.router.navigate(['/']);
-      } else {
-        alert('Un utilisateur existe déjà avec cet email ❌');
-      }
+    if (password !== confirmPassword) {
+      alert('❌ Les mots de passe ne correspondent pas.');
+      return;
     }
+
+    this.authApi.register({ username, email, password }).subscribe({
+      next: () => {
+        alert('✅ Inscription réussie !');
+        localStorage.setItem('connectedUser', email);
+        this.router.navigate(['/']);
+      },
+      error: () => alert('❌ Une erreur est survenue lors de l’inscription.')
+    });
   }
 }

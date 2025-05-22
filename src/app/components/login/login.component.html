@@ -1,23 +1,33 @@
-<h2>Connexion</h2>
-
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="email">Email :</label>
-    <input type="email" id="email" formControlName="email" />
-    <div *ngIf="submitted && loginForm.controls['email'].invalid" style="color: red;">
-
-      Email invalide
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <i class="fas fa-user-lock icon"></i>
+      <h2>Connexion</h2>
     </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email :</label>
+        <input type="email" id="email" formControlName="email" />
+        <div *ngIf="submitted && loginForm.controls['email'].invalid" class="error">
+          Email invalide
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" formControlName="password" />
+        <div *ngIf="submitted && loginForm.controls['password'].invalid" class="error">
+          Mot de passe requis
+        </div>
+      </div>
+
+      <button type="submit" class="btn">Se connecter</button>
+    </form>
+
+    <p class="note">
+      <a href="#" (click)="alertResetPassword()">Mot de passe oublié ?</a><br />
+      <span>(non disponible pour cette version)</span>
+    </p>
   </div>
-
-  <div>
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="password" formControlName="password" />
-    <div *ngIf="submitted && loginForm.controls['password'].invalid" style="color: red;">
-
-      Mot de passe requis
-    </div>
-  </div>
-
-  <button type="submit">Se connecter</button>
-</form>
+</div>

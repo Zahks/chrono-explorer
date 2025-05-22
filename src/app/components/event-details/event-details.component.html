@@ -1,18 +1,53 @@
 <div *ngIf="event; else notFound">
   <h2>{{ event.title }}</h2>
-  <button (click)="toggleFav()" class="fav-button">
+
+  <!-- Description courte -->
+  <p class="description">{{ event.description }}</p>
+
+  <!-- Description longue -->
+  <p class="details" *ngIf="event.details && event.details.length > 0">
+    {{ event.details }}
+  </p>
+
+  <!-- Bouton Favori -->
+  <button (click)="toggleFav()" [disabled]="!isLoggedIn()" class="fav-button">
     {{ isFav ? '💛 Retirer des favoris' : '🤍 Ajouter aux favoris' }}
   </button>
-  
-  
-  <p><strong>Date :</strong> {{ event.date }}</p>
-  <img *ngIf="event?.image" [src]="event.image" alt="{{ event.title }}" class="event-img" />
 
-  <p>{{ event.description }}</p>
+  <!--  Date -->
+  <p><strong>Date :</strong> {{ event.date | date:'fullDate' }}</p>
+
+  <!-- Image principale -->
+  <img *ngIf="event?.image" [src]="'assets/images/' + event.image" alt="{{ event.title }}" class="event-img" />
+
+  <!-- MÉDIAS ASSOCIÉS -->
+  <div *ngIf="media.length > 0">
+    <h3>Médias associés</h3>
+    <div *ngFor="let m of media" style="margin-bottom: 15px;">
+      <div *ngIf="m.type === 'image'">
+        <img [src]="'assets/images/' + m.url" [alt]="m.legend" style="max-width: 100%; border-radius: 8px;" />
+        <p><em>{{ m.legend }}</em></p>
+      </div>
+
+      <div *ngIf="m.type === 'video'">
+        <video width="100%" controls>
+          <source [src]="m.url" type="video/mp4" />
+          Votre navigateur ne supporte pas la lecture vidéo.
+        </video>
+        <p><em>{{ m.legend }}</em></p>
+      </div>
+
+      <div *ngIf="m.type === 'texte'">
+        <blockquote style="border-left: 4px solid #ccc; padding-left: 10px;">
+          {{ m.legend }}
+        </blockquote>
+      </div>
+    </div>
+  </div>
 </div>
 
+<!-- 💬 Commentaires -->
 <app-comment-section [eventId]="event!.id"></app-comment-section>
-
 
 <ng-template #notFound>
   <p>Événement non trouvé 😢</p>

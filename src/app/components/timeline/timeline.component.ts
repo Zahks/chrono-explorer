@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Timeline, DataSet } from 'vis-timeline/standalone';
 import { Router } from '@angular/router';
+import { EventApiService, EventItem } from '../../services/event-api.service';
 import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
@@ -11,21 +12,37 @@ import { SearchBarComponent } from '../search-bar/search-bar.component';
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss']
 })
-export class TimelineComponent implements OnInit {
-  @ViewChild('timeline', { static: true }) timelineContainer!: ElementRef;
-
-  private allItems = [
-    { id: 1, content: 'Naissance de Napoléon', start: '1769-08-15' },
-    { id: 2, content: 'Révolution Française', start: '1789-07-14' },
-    { id: 3, content: 'Première Guerre Mondiale', start: '1914-07-28' }
-  ];
-
+export class TimelineComponent implements OnInit, AfterViewInit {
+  @ViewChild('timeline', { static: false }) timelineContainer!: ElementRef;
   private timeline!: Timeline;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private eventService: EventApiService
+  ) {}
 
   ngOnInit() {
+    // Vide si tu utilises ngAfterViewInit pour charger la timeline
+  }
+
+  ngAfterViewInit() {
+    this.eventService.getEvents().subscribe(events => {
+      this.loadTimeline(events);
+    });
+  }
+
+  loadTimeline(events?: EventItem[]) {
     const container = this.timelineContainer.nativeElement;
+
+    const data = events ?? [];
+
+    const items = new DataSet(
+      data.map(event => ({
+        id: event.id,
+        content: event.title,
+        start: event.date
+      }))
+    );
 
     const options = {
       width: '100%',
@@ -34,10 +51,13 @@ export class TimelineComponent implements OnInit {
       editable: false
     };
 
-    // Initialisation avec tous les événements
-    this.timeline = new Timeline(container, new DataSet(this.allItems), options);
+    // 🧹 Réinitialise si déjà présent
+    if (this.timeline) {
+      this.timeline.destroy();
+    }
 
-    // Clic sur un événement
+    this.timeline = new Timeline(container, items, options);
+
     this.timeline.on('select', (props) => {
       const selectedId = props.items[0];
       if (selectedId) {
@@ -46,13 +66,16 @@ export class TimelineComponent implements OnInit {
     });
   }
 
-  // Méthode déclenchée depuis la SearchBar
-  filterTimeline(searchTerm: string) {
-    const filteredItems = this.allItems.filter(item =>
-      item.content.toLowerCase().includes(searchTerm)
-    );
+  filterTimeline(query: string) {
+    if (!query.trim()) {
+      this.eventService.getEvents().subscribe(events => {
+        this.loadTimeline(events);
+      });
+      return;
+    }
 
-    const newDataSet = new DataSet(filteredItems);
-    this.timeline.setItems(newDataSet);
+    this.eventService.searchEvents(query).subscribe(filtered => {
+      this.loadTimeline(filtered);
+    });
   }
 }

@@ -1,19 +1,52 @@
-<h1>Bienvenue sur Chrono Explorer 🕰️</h1>
+<!-- 🌟 EN-TÊTE MODERNE -->
+<header class="header">
+  <div class="logo">
+    <h1>Bienvenue sur <span>Chrono Explorer ⌛</span></h1>
+  </div>
 
-<nav style="margin-bottom: 20px;">
-  <a routerLink="/" routerLinkActive="active">Accueil</a>
-  <a routerLink="/login" *ngIf="!isLoggedIn()">Connexion</a>
-  <a routerLink="/register" *ngIf="!isLoggedIn()">Inscription</a>
-  <a routerLink="/favorites" *ngIf="isLoggedIn()">Favoris</a>
-  <a routerLink="/admin" *ngIf="isAdmin()">Modération</a>
+  <nav class="navbar">
+    <a routerLink="/" routerLinkActive="active">Accueil</a>
+    <a routerLink="/favorites" *ngIf="isLoggedIn()">Favoris</a>
+    <a routerLink="/admin" *ngIf="isAdmin()">Modération</a>
 
-  <span *ngIf="isLoggedIn()">
-    <span *ngIf="isAdmin()" style="color: darkgreen; font-weight: bold;">
-      [ADMIN CONNECTÉ 🛡️]
-    </span>
-    Bonjour, {{ getUsername() }} |
-    <a href="#" (click)="logout()">Se déconnecter</a>
-  </span>
-</nav>
+    <ng-container *ngIf="isLoggedIn(); else guestLinks">
+      <div class="user-info">
+        <div class="avatar">
+          {{ getUsername().charAt(0) | uppercase }}
+        </div>
+        <span class="username">Bonjour, {{ getUsername() }}</span>
+        <button class="btn btn-logout" (click)="logout()">Se déconnecter</button>
+      </div>
+    </ng-container>
 
+    <ng-template #guestLinks>
+      <a routerLink="/login">Connexion</a>
+      <a routerLink="/register">Inscription</a>
+    </ng-template>
+
+    <button class="btn theme-toggle" (click)="toggleTheme()">
+      🌓 {{ isDarkMode ? 'Mode Clair' : 'Mode Sombre' }}
+    </button>
+  </nav>
+</header>
+
+<!-- ✨ DESCRIPTION -->
+<h2 class="tagline">
+  Explorez les grandes périodes de l’Histoire à travers une ligne du temps interactive 🗺️
+</h2>
+
+<!-- 🚀 CONTENU PRINCIPAL -->
 <router-outlet></router-outlet>
+
+<!-- 📜 FOOTER -->
+<footer class="footer">
+  <div class="footer-text">
+    © 2025 Chrono Explorer – Projet réalisé pour le Musée du Louvre 🏛️
+  </div>
+  <div class="footer-link">
+    <a href="https://github.com/zahks/chrono-explorer" target="_blank">
+      Voir le projet sur GitHub
+    </a>
+  </div>
+</footer>
+

@@ -19,3 +19,164 @@ a {
     border-color: #999;
   }
   
+
+  .header {
+  background: linear-gradient(to right, #f3f4f6, #e2e8f0);
+  padding: 25px 20px 15px;
+  border-bottom: 1px solid #ccc;
+  text-align: center;
+}
+
+.logo h1 {
+  font-size: 2rem;
+  margin: 0;
+  font-weight: bold;
+  color: #1ba743;
+}
+
+.logo span {
+  color: #3b82f6;
+}
+
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.navbar a {
+  padding: 10px 18px;
+  border-radius: 30px;
+  background-color: #f1f5f9;
+  text-decoration: none;
+  color: #1e293b;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.theme-toggle {
+  background-color: #6366f1;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background-color: #4f46e5;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.username {
+  font-weight: 600;
+  color: #ef4444;
+}
+
+.btn-logout {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  font-size: 0.85em;
+  color: #666;
+  border-top: 1px solid #ddd;
+}
+
+.tagline {
+  text-align: center;
+  font-style: italic;
+  color: #28529f;
+  margin-top: 10px;
+}
+
+/* 🌙 Dark Mode Support */
+body.dark-theme {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+body.dark-theme .header {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+body.dark-theme .logo h1 {
+  color: #f9fafb;
+}
+
+body.dark-theme .navbar a {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+
+body.dark-theme .navbar a:hover {
+  background-color: #4f46e5;
+}
+
+body.dark-theme .theme-toggle {
+  background-color: #4f46e5;
+}
+
+body.dark-theme .btn-logout {
+  background-color: #f87171;
+}
+
+body.dark-theme .avatar {
+  background-color: #4f46e5;
+}
+
+body.dark-theme .username {
+  color: #ffffff !important;
+}
+
+
+body.dark-theme .tagline {
+  color: #eeeeee;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+
+body,
+.header,
+.tagline,
+.username {
+  transition: all 0.3s ease;
+}
+

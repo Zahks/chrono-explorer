@@ -17,7 +17,7 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private auth: AuthService,
     private router: Router
   ) {
     this.loginForm = this.fb.group({
@@ -28,26 +28,21 @@ export class LoginComponent {
 
   onSubmit(): void {
     this.submitted = true;
+    if (this.loginForm.invalid) return;
 
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      const success = this.authService.login(email, password);
+    const { email, password } = this.loginForm.value;
 
+    this.auth.login(email, password).then(success => {
       if (success) {
-        const normalizedEmail = email.trim().toLowerCase();
-        const isAdmin = normalizedEmail === 'admin@chrono.fr';
-
-        alert(`Bienvenue ${this.authService.getUsername()} !`);
-
-        // Redirection conditionnelle
-        if (isAdmin) {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/']);
-        }
+        alert(`Bienvenue ${this.auth.getUsername()} ✅`);
+        this.router.navigate(['/']);
       } else {
-        alert('Email ou mot de passe incorrect ❌');
+        alert('❌ Identifiants invalides.');
       }
-    }
+    });
+  }
+
+  alertResetPassword() {
+    alert('🔒 Fonctionnalité non disponible pour cette version.');
   }
 }

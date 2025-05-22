@@ -1,65 +1,91 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { AuthApiService } from './auth-api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private users = [
-    { username: 'test', email: 'test@test.com', password: '123456' },
-    { username: 'admin', email: 'admin@chrono.fr', password: 'admin' } // ← compte admin valide
-  ];
-
+  private authApi = inject(AuthApiService);
   currentUser = signal<string | null>(null);
+  private currentEmail = '';
 
-  constructor() {
+  private admin = { email: 'admin@chrono.fr', password: 'admin', username: 'admin' };
+
+  constructor() {}
+
+  init(): void {
     const saved = localStorage.getItem('connectedUser');
     if (saved) {
-      const normalizedEmail = saved.trim().toLowerCase();
-      const userExists = this.users.some(u => u.email.trim().toLowerCase() === normalizedEmail);
-      if (userExists) {
-        this.currentUser.set(normalizedEmail);
-      } else {
-        this.logout(); // 🔒 on nettoie si invalide
-      }
+      const user = JSON.parse(saved);
+      this.currentUser.set(user.username);
+      this.currentEmail = user.email;
     }
   }
 
-  login(email: string, password: string): boolean {
+  login(email: string, password: string): Promise<boolean> {
     const normalizedEmail = email.trim().toLowerCase();
-    const user = this.users.find(u => u.email.trim().toLowerCase() === normalizedEmail && u.password === password);
-    if (user) {
-      localStorage.setItem('connectedUser', normalizedEmail);
-      this.currentUser.set(normalizedEmail);
-      return true;
+
+    if (
+      normalizedEmail === this.admin.email &&
+      password === this.admin.password
+    ) {
+      const adminUser = { email: this.admin.email, username: this.admin.username };
+      localStorage.setItem('connectedUser', JSON.stringify(adminUser));
+      this.currentUser.set(adminUser.username);
+      this.currentEmail = adminUser.email;
+      return Promise.resolve(true);
     }
-    return false;
+
+    return new Promise((resolve) => {
+      this.authApi.login(normalizedEmail, password).subscribe({
+        next: (user) => {
+          if (user) {
+            const userData = JSON.stringify({ email: user.email, username: user.username });
+            localStorage.setItem('connectedUser', userData);
+            this.currentUser.set(user.username);
+            this.currentEmail = user.email;
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        },
+        error: () => resolve(false)
+      });
+    });
   }
 
-  register(username: string, email: string, password: string): boolean {
+  register(username: string, email: string, password: string): Promise<boolean> {
     const normalizedEmail = email.trim().toLowerCase();
-    const existing = this.users.find(u => u.email.trim().toLowerCase() === normalizedEmail);
-    if (existing) return false;
 
-    this.users.push({ username, email: normalizedEmail, password });
-    localStorage.setItem('connectedUser', normalizedEmail);
-    this.currentUser.set(normalizedEmail);
-    return true;
+    return new Promise((resolve) => {
+      this.authApi.register({ username, email: normalizedEmail, password }).subscribe({
+        next: () => {
+          const userData = JSON.stringify({ email: normalizedEmail, username });
+          localStorage.setItem('connectedUser', userData);
+          this.currentUser.set(username);
+          this.currentEmail = normalizedEmail;
+          resolve(true);
+        },
+        error: () => resolve(false)
+      });
+    });
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('connectedUser');
     this.currentUser.set(null);
+    this.currentEmail = '';
   }
 
   isLoggedIn(): boolean {
     return this.currentUser() !== null;
   }
 
-  getUsername(): string | null {
-    const email = this.currentUser();
-    if (!email) return null;
+  getUsername(): string {
+    return this.currentUser() ?? '';
+  }
 
-    const user = this.users.find(u => u.email.trim().toLowerCase() === email);
-    return user ? user.username : null;
+  isAdmin(): boolean {
+    return this.currentEmail.trim().toLowerCase() === this.admin.email;
   }
 }

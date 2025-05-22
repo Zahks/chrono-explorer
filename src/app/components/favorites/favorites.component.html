@@ -1,13 +1,22 @@
 <h2>⭐ Événements favoris</h2>
 
-<div *ngIf="favoriteEvents.length > 0; else noFavs">
-  <ul>
-    <li *ngFor="let event of favoriteEvents">
-      <a [routerLink]="['/event', event.id]">{{ event.title }}</a> ({{ event.date }})
-    </li>
-  </ul>
+<div *ngIf="favoriteEvents.length > 0; else noFavs" class="fav-grid">
+  <div *ngFor="let event of favoriteEvents" class="event-card">
+    <img
+      *ngIf="event.image"
+      [src]="'assets/images/' + event.image"
+      [alt]="event.title"
+    />
+    <div class="card-content">
+      <h3>{{ event.title }}</h3>
+      <p class="date">{{ event.date | date: 'longDate' }}</p>
+      <a [routerLink]="['/event', event.id]" class="details-link">
+        Voir les détails
+      </a>
+    </div>
+  </div>
 </div>
 
 <ng-template #noFavs>
-  <p>Aucun événement ajouté aux favoris pour le moment 💔</p>
+  <p>Vous n'avez aucun événement ajouté aux favoris pour le moment 💔</p>
 </ng-template>
