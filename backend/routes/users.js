@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../db');
 
-// ✅ Inscription d’un utilisateur
+//  Inscription d’un utilisateur
 router.post('/register', (req, res) => {
   const { username, email, password } = req.body;
 
@@ -33,7 +33,7 @@ router.post('/register', (req, res) => {
   });
 });
 
-// ✅ Connexion d’un utilisateur
+// Connexion d’un utilisateur
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -55,5 +55,19 @@ router.post('/login', (req, res) => {
     });
   });
 });
+
+// Récupérer tous les utilisateurs (à des fins d'admin ou de test)
+router.get('/', (req, res) => {
+  const sql = 'SELECT id, username, email FROM users'; // On ne renvoie PAS les mots de passe
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('❌ Erreur récupération utilisateurs :', err);
+      return res.status(500).json({ error: 'Erreur serveur' });
+    }
+    res.json(results);
+  });
+});
+
+
 
 module.exports = router;

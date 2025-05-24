@@ -54,7 +54,7 @@ router.put('/:id/validate', (req, res) => {
   });
 });
 
-// 🔎 Récupérer tous les commentaires non modérés
+//  Récupérer tous les commentaires non modérés
 router.get('/pending', (req, res) => {
   const sql = 'SELECT * FROM comments WHERE isModerated = 0';
   db.query(sql, (err, results) => {
@@ -66,7 +66,7 @@ router.get('/pending', (req, res) => {
   });
 });
 
-// ✅ Valider un commentaire
+//  Valider un commentaire
 router.put('/moderate/:id', (req, res) => {
   const commentId = req.params.id;
   const sql = 'UPDATE comments SET isModerated = 1 WHERE id = ?';
@@ -79,7 +79,7 @@ router.put('/moderate/:id', (req, res) => {
   });
 });
 
-// 🗑️ Supprimer un commentaire
+// Supprimer un commentaire
 router.delete('/:id', (req, res) => {
   const commentId = req.params.id;
   const sql = 'DELETE FROM comments WHERE id = ?';

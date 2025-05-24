@@ -11,10 +11,10 @@ app.use(express.json());
 
 // Connexion à MySQL
 const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'chrono_explorer'
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'chrono_explorer'
 });
 
 db.connect((err) => {

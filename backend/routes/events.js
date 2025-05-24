@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const db = require('../db'); // 🔁 Connexion MySQL partagée
+const db = require('../db'); //  Connexion MySQL partagée
 
-// ✅ Récupérer tous les événements
+//  Récupérer tous les événements
 router.get('/', (req, res) => {
   const sql = 'SELECT * FROM events';
   db.query(sql, (err, results) => {
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
   });
 });
 
-// 🔎 ✅ Rechercher des événements par titre, description ou date
+//  Rechercher des événements par titre, description ou date
 router.get('/search', (req, res) => {
     console.log('🔍 Requête de recherche reçue avec :', req.query.q);
     

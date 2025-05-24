@@ -1,0 +1,68 @@
+=============================================
+    CHRONO EXPLORER - GUIDE D'INSTALLATION
+=============================================
+
+🧱 PRÉREQUIS
+------------
+- Node.js (v18 recommandé)
+- Angular CLI
+- Docker Desktop
+- Git
+
+=============================================
+
+1️⃣ CLONAGE DU RÉPO
+--------------------
+git clone https://github.com/Zahks/chrono-explorer.git
+cd chrono-explorer
+
+=============================================
+
+2️⃣ LANCER LE BACKEND + BASE DE DONNÉES
+---------------------------------------
+
+🔸 Méthode A (RECOMMANDÉE - avec Docker Compose) :
+
+docker compose up --build
+
+Cela lance :
+✅ Backend Node.js (http://localhost:3000/api)
+✅ MySQL + import auto du fichier chrono_explorer.sql
+
+🔸 Méthode B (sans Docker) :
+
+cd backend
+node index.js
+
+(Pensez à avoir un MySQL en local + fichier .env bien configuré)
+
+=============================================
+
+3️⃣ LANCER LE FRONTEND ANGULAR
+-------------------------------
+
+cd chrono-explorer
+ng serve
+
+👉 Ouvrir : http://localhost:4200
+
+=============================================
+
+4️⃣ TESTS API (facultatif)
+---------------------------
+
+Vous pouvez utiliser Postman pour tester les endpoints suivants :
+
+- GET http://localhost:3000/api/events
+- GET http://localhost:3000/api/users
+Et bien d'autres  
+=============================================
+
+📌 REMARQUES
+------------
+- Fichier SQL à importer automatiquement : docs/chrono_explorer.sql
+- Port MySQL par défaut : 3306 (changeable si conflit)
+- Port backend : 3000
+- Port frontend : 4200
+
+🎉 Le projet est prêt à l’usage !

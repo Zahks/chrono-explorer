@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=chrono_explorer
+      - PORT=3000
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: chrono_explorer
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./docs/chrono_explorer.sql:/docker-entrypoint-initdb.d/init.sql
